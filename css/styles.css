@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
+
+/* GENERAL*/
+
+
+:root {
+    --income: #28B9B5;
+    --expenditure: #a18851;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -7,15 +16,16 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.red { color: #FF5049 !important; }
-.red-focus:focus { border: 1px solid #FF5049 !important; }
-
 body {
     background-color: #f5efe1;
     font-size: 16px;
     height: 100vh;
     position: relative;
 }
+
+
+/* TOP */
+
 
 .top {
     height: 50vh;
@@ -58,16 +68,18 @@ body {
     align-items: center;
 }
 
-.right {
-    display: flex;
+.budget-income {
+    background-color: var(--income);
 }
 
-.budget-income {
-    background-color: #28B9B5;
+.right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .budget-expenditure {
-    background-color: #FF5049;
+    background-color: var(--expenditure);
 }
 
 .budget-income-word,
@@ -95,6 +107,10 @@ body {
     text-align: center;
     border-radius: 3px;
 }
+
+
+/* BOTTOM */
+
 
 .add {
     padding: 14px;
@@ -152,4 +168,72 @@ body {
 .add-img:hover { 
     background-color: #fff;
     border-radius: 50%;
+}
+
+.container {
+    width: 1000px;
+    margin: 60px auto;
+    display: flex;
+}
+
+.income {
+    width: 475px;
+    margin-right: 50px;
+}
+
+.expenditure {
+    width: 475px;
+}
+
+.container h2 {
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.income-title { color: var(--income); }
+.expenditure-title { color: var(--expenditure); }
+
+.item {
+    padding: 13px;
+    border-bottom: 1px solid #e7e7e7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item:first-child { border-top: 1px solid #e7e7e7; }
+.item:nth-child(even) { background-color: #f7f7f7; }
+
+.item-percent {
+    margin-left: 20px;
+    font-size: 12px;
+    background-color: #ece3ce;
+    padding: 3px;
+    border-radius: 3px;
+    width: 32px;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.income .item-value {
+    color: var(--income);
+    font-weight: bold;
+}
+
+.expenditure .item-value,
+.expenditure .item-percent {
+    color: var(--expenditure);
+    font-weight: bold;
+}
+
+.item-delete svg {
+    cursor: pointer;
+    display: inline-block;
+    margin: 15px;
+}
+
+.item-delete svg path:hover {
+    fill: red;
 }
