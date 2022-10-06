@@ -232,6 +232,7 @@ body {
     cursor: pointer;
     display: inline-block;
     margin: 15px;
+    display: none;
 }
 
 .item-delete svg path:hover {
