@@ -11,7 +11,7 @@ const budgetExpenditurePercent = document.querySelector("#budget-expenditure-per
 
 let budget = (() => {
     let Incomes = function(id, des, val) {
-        this.id = is;
+        this.id = id;
         this.des = des;
         this.val = val
     };
@@ -24,14 +24,40 @@ let budget = (() => {
 
     let datas = {
         descriptions: {
-            allIncomes: [],
-            allExpenditures: []
+            plus: [],
+            minus: []
         },
         values: {
-            allIncomes: [],
-            allExpenditures: []
+            plus: [],
+            minus: []
         }
     };
+
+    return {
+        addItems: function(type, desc, val) {
+            let newItem;
+            let id;
+
+            if (datas.descriptions[type].length > 0) {
+                id = datas.descriptions[type][datas.descriptions[type].length - 1].id + 1;
+            } else {
+                id = 0;
+            }
+
+            if (type === "plus") {
+                newItem = new Incomes(id, desc, val);
+            } else if (type === "minus") {
+                newItem = new Expenditures(id, desc, val);
+            }
+
+            datas.descriptions[type].push(newItem);
+
+            return newItem;
+        },
+        test: function() {
+            console.log(datas);
+        }
+    }
 
 })();
 
@@ -53,6 +79,6 @@ let control = ((bud, ui) => {
     addButton.addEventListener("click", (e) => {
         e.preventDefault();
         let input = ui.getInput();
-        console.log(input);
+        let newItem = bud.addItems(input.type, input.dec, input.value);
     })
 })(budget, userInterface);
