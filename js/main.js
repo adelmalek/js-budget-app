@@ -13,67 +13,76 @@ const expenditureList = document.querySelector("#expenditure-list");
 
 
 let budget = (() => {
+    // bevételek adattároló
     let Incomes = function(id, des, val) {
         this.id = id;
         this.des = des;
         this.val = val
     };
 
+    // kiadások adattároló
     let Expenditures = function(id, des, val) {
         this.id = id;
         this.des = des;
         this.val = val;
     };
 
+    // bevételek és kiadások leírása és értéke
     let datas = {
         descriptions: {
             plus: [],
             minus: []
         },
         values: {
-            plus: [],
-            minus: []
+            plus: 0,
+            minus: 0
         }
     };
 
     return {
+        // adatok hozzáadása
         addItems: function(type, desc, val) {
             let newItem;
             let id;
 
+            // id létrehozása
             if (datas.descriptions[type].length > 0) {
                 id = datas.descriptions[type][datas.descriptions[type].length - 1].id + 1;
             } else {
                 id = 0;
             }
 
+            // bevétel vagy kiadás létrehozása
             if (type === "plus" &&  desc.trim().length > 0) {
                 newItem = new Incomes(id, desc, val);
             } else if (type === "minus" && desc.trim().length > 0) {
                 newItem = new Expenditures(id, desc, val);
             }
 
+            // bevétel vagy kiadás hozzáadása az őket tartalmazó tömbhöz
             datas.descriptions[type].push(newItem);
 
+            // új tétel visszaadása
             return newItem;
         },
         test: function() {
             console.log(datas);
         }
     }
-
 })();
 
 
 let userInterface = (() => {
     return {
+        // input adatok megszerzése
         getInput: () => {
             return {
                 type: plusOrMinus.value,
                 dec: description.value,
-                value: money.value
+                value: parseFloat(money.value).toFixed(2)
             }
         },
+        // adatok megjelenítése a felületen
         displayItems: (obj, type) => {
             if (type === "plus") {
                 incomeList.innerHTML += `
@@ -111,12 +120,34 @@ let userInterface = (() => {
 })();
 
 
+let updateAmount = function() {
+
+};
+
+
 let control = ((bud, ui) => {
     addButton.addEventListener("click", (e) => {
         e.preventDefault();
+
+        // 1. bevitt adatok megszerzése
         let input = ui.getInput();
-        let newItem = bud.addItems(input.type, input.dec, input.value);
-        ui.displayItems(newItem, input.type);
-        ui.initInputField();
+
+        if ( (input.dec.trim().length > 0) && (input.value > 0 && !isNaN(input.value)) ) {
+            // 2. adatok átadása a budget modulnak
+            let newItem = bud.addItems(input.type, input.dec, input.value);
+
+            // 3. adatok megjelenítése
+            ui.displayItems(newItem, input.type);
+
+            // 4. beviteli mezők kiürítése
+            ui.initInputField();
+
+            // 5. költségevetés összeszámolása
+            // 6. összeg visszaadása
+            // 7. össszeg megjelenítése a felületen
+            updateAmount();
+
+            bud.test();
+        }  
     })
 })(budget, userInterface);
