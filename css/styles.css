@@ -230,13 +230,20 @@ body {
     font-weight: bold;
 }
 
-.item-delete svg {
-    cursor: pointer;
-    display: inline-block;
-    margin: 15px;
-    display: none;
+.item-delete {
+    border: none;
+    background: none;
+    margin-left: 25px;
 }
 
-.item-delete svg path:hover {
-    fill: red;
+.item-delete svg {
+    cursor: pointer;
+    display: none;
+    vertical-align: middle;
 }
+
+.item-delete svg:hover {
+    fill: rgb(224, 49, 93);
+}
+
+.item:hover .item-delete svg { display: block; }
