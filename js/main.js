@@ -149,6 +149,16 @@ let userInterface = (() => {
             description.value = "";
             money.value = "";
             description.focus();
+        },
+        displayBudget: function(amount) {
+            budgetValue.innerHTML = `${amount.budget} €`;
+            budgetIncomeValue.innerHTML = `${amount.totalPlus} €`;
+            budgetExpenditureValue.innerHTML = `${amount.totalMinus} €`;
+            if (amount.percent > 0) {
+                budgetExpenditurePercent.innerHTML = `${amount.percent} %`;
+            } else {
+                budgetExpenditurePercent.innerHTML = "-";
+            }
         }
     }
 })();
@@ -162,7 +172,7 @@ let updateAmount = function() {
     let allAmount = budget.getAllAmount();
 
     // 7. össszeg megjelenítése a felületen
-    console.log(allAmount);
+    userInterface.displayBudget(allAmount);
 };
 
 
