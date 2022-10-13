@@ -36,7 +36,15 @@ let budget = (() => {
         values: {
             plus: 0,
             minus: 0
-        }
+        },
+        budget: 0,
+        percent: -1
+    };
+
+    // bevételek és kiadások összegének kiszámítása
+    let calculationOfTotalAmount = function(type) {
+        let amount = datas.descriptions[type].map(x => x.val).reduce((acc, next) => acc + next, 0);
+        datas.values[type] = amount;
     };
 
     return {
@@ -65,6 +73,31 @@ let budget = (() => {
             // új tétel visszaadása
             return newItem;
         },
+        // bevételek és kiadások összeszámolása
+        calcTotal: function() {
+            // összes bevétel és összes kiadás számolása
+            calculationOfTotalAmount("plus");
+            calculationOfTotalAmount("minus");
+
+            // költségvetés kiszámolása
+            datas.budget = datas.values.plus - datas.values.minus;
+
+            // százelék számolása
+            if (datas.values.plus > 0) {
+                datas.percent = Math.round(datas.values.minus / datas.values.plus * 100);
+            } else {
+                datas.percent = -1;
+            }
+        },
+        // költségvetés visszaadása
+        getAllAmount: function() {
+            return {
+                budget: datas.budget,
+                totalPlus: datas.values.plus,
+                totalMinus: datas.values.minus,
+                percent: datas.percent
+            }
+        },
         test: function() {
             console.log(datas);
         }
@@ -79,7 +112,7 @@ let userInterface = (() => {
             return {
                 type: plusOrMinus.value,
                 dec: description.value,
-                value: parseFloat(money.value).toFixed(2)
+                value: Number(parseFloat(money.value).toFixed(2))
             }
         },
         // adatok megjelenítése a felületen
@@ -121,7 +154,14 @@ let userInterface = (() => {
 
 
 let updateAmount = function() {
+    // 5. költségvetés összeszámolása
+    budget.calcTotal();
 
+    // 6. összeg visszaadása
+    let allAmount = budget.getAllAmount();
+
+    // 7. össszeg megjelenítése a felületen
+    console.log(allAmount);
 };
 
 
@@ -142,7 +182,7 @@ let control = ((bud, ui) => {
             // 4. beviteli mezők kiürítése
             ui.initInputField();
 
-            // 5. költségevetés összeszámolása
+            // 5. költségvetés összeszámolása
             // 6. összeg visszaadása
             // 7. össszeg megjelenítése a felületen
             updateAmount();
