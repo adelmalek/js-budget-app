@@ -11,6 +11,8 @@ const budgetExpenditurePercent = document.querySelector("#budget-expenditure-per
 const incomeList = document.querySelector("#income-list");
 const expenditureList = document.querySelector("#expenditure-list");
 
+const container = document.querySelector("#container");
+
 
 let budget = (() => {
     // bevételek adattároló
@@ -98,6 +100,10 @@ let budget = (() => {
                 percent: datas.percent
             }
         },
+        deleteItem: function(type, id) {
+            type = datas.descriptions[type];
+
+        },
         test: function() {
             console.log(datas);
         }
@@ -119,7 +125,7 @@ let userInterface = (() => {
         displayItems: (obj, type) => {
             if (type === "plus") {
                 incomeList.innerHTML += `
-                    <div class="item" id="incomes-${obj.id}">
+                    <div class="item" id="plus-${obj.id}">
                         <div class="item-description">${obj.des}</div>
                         <div class="right">
                             <div class="item-value">${obj.val} &euro;</div>
@@ -131,7 +137,7 @@ let userInterface = (() => {
                 `
             } else if (type === "minus") {
                 expenditureList.innerHTML += `
-                    <div class="item" id="expenditures-${obj.id}">
+                    <div class="item" id="minus-${obj.id}">
                         <div class="item-description">${obj.des}</div>
                         <div class="right">
                             <div class="item-value">${obj.val} &euro;</div>
@@ -201,4 +207,23 @@ let control = ((bud, ui) => {
             bud.test();
         }  
     })
+    
+    // 1. eseménykezelő a törlés gombhoz
+    // 2. típus kinyerése
+    // 3. id kinyerése
+    container.addEventListener("click", (e) => {
+        let item = e.target.parentNode.parentNode.parentNode.id;
+        if (item) {
+            let splitItem = item.split("-");
+            let type = splitItem[0];
+            let id = splitItem[1];
+            bud.deleteItem(type, id);
+        }
+    });
 })(budget, userInterface);
+
+
+// 2. a törölt tételt el kell távolítani a datas struktúrából
+// 3. a törölt tételt törölni kell a felhasználói felületről
+// 4. költségvetés újraszámolása
+// 5. költségvetés frissítése a felületen
