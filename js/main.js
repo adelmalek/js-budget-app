@@ -101,8 +101,11 @@ let budget = (() => {
             }
         },
         deleteItem: function(type, id) {
-            type = datas.descriptions[type];
-
+            let keres = datas.descriptions[type];
+            const index = keres.findIndex(object => {
+                return object.id === id;
+              });
+            console.log(index)
         },
         test: function() {
             console.log(datas);
@@ -209,15 +212,17 @@ let control = ((bud, ui) => {
     })
     
     // 1. eseménykezelő a törlés gombhoz
-    // 2. típus kinyerése
-    // 3. id kinyerése
     container.addEventListener("click", (e) => {
-        let item = e.target.parentNode.parentNode.parentNode.id;
-        if (item) {
+        if (e.target.closest("#item-delete")) {
+            // 2. típus kinyerése
+            // 3. id kinyerése
+            let item = e.target.parentNode.parentNode.parentNode.id;
             let splitItem = item.split("-");
             let type = splitItem[0];
-            let id = splitItem[1];
-            bud.deleteItem(type, id);
+            let id = Number(splitItem[1]);
+            if (typeof id === "number" && id !== "undefined") {
+                bud.deleteItem(type, id);
+            }
         }
     });
 })(budget, userInterface);
