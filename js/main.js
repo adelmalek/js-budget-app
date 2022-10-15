@@ -100,12 +100,13 @@ let budget = (() => {
                 percent: datas.percent
             }
         },
-        deleteItem: function(type, id) {
-            let keres = datas.descriptions[type];
-            const index = keres.findIndex(object => {
-                return object.id === id;
-              });
-            console.log(index)
+        // a törölt tételt el kell távolítani a datas struktúrából
+        deleteItem: function(type, id) { 
+            // console.log(type, id);
+            let keres = datas.descriptions[type].filter(x => x.id === id);
+            console.log(keres)
+            // delete datas.descriptions[type].keres
+            console.log(datas);
         },
         test: function() {
             console.log(datas);
@@ -168,6 +169,10 @@ let userInterface = (() => {
             } else {
                 budgetExpenditurePercent.innerHTML = "-";
             }
+        },
+        removeItem: function(id) {
+            let item = document.getElementById(id);
+            item.parentNode.removeChild(item);
         }
     }
 })();
@@ -213,22 +218,22 @@ let control = ((bud, ui) => {
     
     // 1. eseménykezelő a törlés gombhoz
     container.addEventListener("click", (e) => {
-        if (e.target.closest("#item-delete")) {
+        if (e.target.closest(".item-delete")) {
             // 2. típus kinyerése
             // 3. id kinyerése
             let item = e.target.parentNode.parentNode.parentNode.id;
-            let splitItem = item.split("-");
-            let type = splitItem[0];
-            let id = Number(splitItem[1]);
-            if (typeof id === "number" && id !== "undefined") {
+            if (item) {
+                let splitItem = item.split("-");
+                let type = splitItem[0];
+                let id = Number(splitItem[1]);
                 bud.deleteItem(type, id);
+                ui.removeItem(item);
+                updateAmount();
             }
         }
     });
 })(budget, userInterface);
 
-
-// 2. a törölt tételt el kell távolítani a datas struktúrából
 // 3. a törölt tételt törölni kell a felhasználói felületről
 // 4. költségvetés újraszámolása
 // 5. költségvetés frissítése a felületen
