@@ -102,10 +102,14 @@ let budget = (() => {
         },
         // a törölt tételt el kell távolítani a datas struktúrából
         deleteItem: function(type, id) { 
-            // amit ki akarok törölni objektum
-            let delItem = datas.descriptions[type][id];
+            // az összes id kinyerése
+            let indexOfAllItem = datas.descriptions[type].map(obj => obj.id);
+            // törlésre váró objektum id-ja
+            let indexOfItem = indexOfAllItem.indexOf(id);
             // az objektum törlése az őt tartalmazó mappából
-            datas.descriptions[type].splice(delItem, 1);  
+            if (indexOfItem !== -1) {
+                datas.descriptions[type].splice(indexOfItem , 1);
+            }
         },
         test: function() {
             console.log(datas);
@@ -171,6 +175,7 @@ let userInterface = (() => {
         },
         removeItem: function(id) {
             let item = document.getElementById(id);
+            // egy elem gyermekének a törlése
             item.parentNode.removeChild(item);
         }
     }
@@ -220,19 +225,15 @@ let control = ((bud, ui) => {
         if (e.target.closest(".item-delete")) {
             // 2. típus kinyerése
             // 3. id kinyerése
-            let item = e.target.parentNode.parentNode.parentNode.id;
-            if (item) {
-                let splitItem = item.split("-");
-                let type = splitItem[0];
-                let id = Number(splitItem[1]);
+            let itemId = e.target.parentNode.parentNode.parentNode.id;
+            if (itemId) {
+                let splitItemId = itemId.split("-");
+                let type = splitItemId[0];
+                let id = Number(splitItemId[1]);
                 bud.deleteItem(type, id);
-                ui.removeItem(item);
+                ui.removeItem(itemId);
                 updateAmount();
             }
         }
     });
 })(budget, userInterface);
-
-// 3. a törölt tételt törölni kell a felhasználói felületről
-// 4. költségvetés újraszámolása
-// 5. költségvetés frissítése a felületen
