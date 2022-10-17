@@ -102,11 +102,10 @@ let budget = (() => {
         },
         // a törölt tételt el kell távolítani a datas struktúrából
         deleteItem: function(type, id) { 
-            // console.log(type, id);
-            let keres = datas.descriptions[type].filter(x => x.id === id);
-            console.log(keres)
-            // delete datas.descriptions[type].keres
-            console.log(datas);
+            // amit ki akarok törölni objektum
+            let delItem = datas.descriptions[type][id];
+            // az objektum törlése az őt tartalmazó mappából
+            datas.descriptions[type].splice(delItem, 1);  
         },
         test: function() {
             console.log(datas);
