@@ -27,7 +27,23 @@ let budget = (() => {
         this.id = id;
         this.des = des;
         this.val = val;
+        this.percent = -1;
     };
+
+    // százelék kiszámítása
+    Expenditures.prototype.percentageCalc = function(totalIncome) {
+        // százalék = kiadás értéke / összbevétel * 100
+        if (totalIncome > 0) {
+            this.percent = Math.round(this.val / totalIncome * 100);
+        } else {
+            this.percent = -1;
+        }
+    };
+
+    // százalék kiolvasása az adott tételhez
+    Expenditures.prototype.getPercentage = function() {
+        return this.percent;
+    }
 
     // bevételek és kiadások leírása és értéke
     let datas = {
@@ -111,6 +127,17 @@ let budget = (() => {
                 datas.descriptions[type].splice(indexOfItem , 1);
             }
         },
+        // százalékok számítása
+        calcPercentages: function() {
+            // százalékok kiszámítása minden tételhez
+            return datas.descriptions.minus.map(x => x.percentageCalc(datas.values.plus));
+        },
+        // százalék lekérdezés
+        queryPercentages: function() {
+            let expendesPercentages = datas.descriptions.minus.map(y => y.getPercentage());
+            return expendesPercentages;
+        },
+        // tesztelés
         test: function() {
             console.log(datas);
         }
@@ -194,6 +221,16 @@ let updateAmount = function() {
 };
 
 
+let updatePercent = function() {
+    // 1. Százalékok újraszámolása
+    budget.calcPercentages();
+    // 2. Százalékok kiolvasása a budget vezérlőből
+    let expendesPercentages = budget.queryPercentages();
+    // 3. Felület frissítése az új százalékokkal
+    console.log(expendesPercentages);
+}
+
+
 let control = ((bud, ui) => {
     addButton.addEventListener("click", (e) => {
         e.preventDefault();
@@ -216,6 +253,9 @@ let control = ((bud, ui) => {
             // 7. össszeg megjelenítése a felületen
             updateAmount();
 
+            // 8.százalékok újraszámolása
+            updatePercent();
+
             bud.test();
         }  
     })
@@ -233,6 +273,7 @@ let control = ((bud, ui) => {
                 bud.deleteItem(type, id);
                 ui.removeItem(itemId);
                 updateAmount();
+                updatePercent();
             }
         }
     });
