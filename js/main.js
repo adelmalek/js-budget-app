@@ -1,3 +1,6 @@
+/***********
+DOM ELEMENTS
+***********/
 const addButton = document.querySelector("#add-btn");
 const plusOrMinus = document.querySelector("#select");
 const description = document.querySelector("#add-description");
@@ -14,15 +17,18 @@ const expenditureList = document.querySelector("#expenditure-list");
 const container = document.querySelector("#container");
 
 
+/***********
+MODUL BUDGET
+***********/
 let budget = (() => {
-    // bevételek adattároló
+    // constructor
     let Incomes = function(id, des, val) {
         this.id = id;
         this.des = des;
         this.val = val
     };
 
-    // kiadások adattároló
+    // constructor
     let Expenditures = function(id, des, val) {
         this.id = id;
         this.des = des;
@@ -45,8 +51,8 @@ let budget = (() => {
         return this.percent;
     }
 
-    // bevételek és kiadások leírása és értéke
-    let datas = {
+    // data
+    let data = {
         descriptions: {
             plus: [],
             minus: []
@@ -61,34 +67,34 @@ let budget = (() => {
 
     // bevételek és kiadások összegének kiszámítása
     let calculationOfTotalAmount = function(type) {
-        let amount = datas.descriptions[type].map(x => x.val).reduce((acc, next) => acc + next, 0);
-        datas.values[type] = amount;
+        let amount = data.descriptions[type].map(x => x.val).reduce((acc, next) => acc + next, 0);
+        data.values[type] = amount;
     };
 
     return {
-        // adatok hozzáadása
+        // add item
         addItems: function(type, desc, val) {
             let newItem;
             let id;
 
-            // id létrehozása
-            if (datas.descriptions[type].length > 0) {
-                id = datas.descriptions[type][datas.descriptions[type].length - 1].id + 1;
+            // create id
+            if (data.descriptions[type].length > 0) {
+                id = data.descriptions[type][data.descriptions[type].length - 1].id + 1;
             } else {
                 id = 0;
             }
 
-            // bevétel vagy kiadás létrehozása
+            // create income or expendes
             if (type === "plus" &&  desc.trim().length > 0) {
                 newItem = new Incomes(id, desc, val);
             } else if (type === "minus" && desc.trim().length > 0) {
                 newItem = new Expenditures(id, desc, val);
             }
 
-            // bevétel vagy kiadás hozzáadása az őket tartalmazó tömbhöz
-            datas.descriptions[type].push(newItem);
+            // add income or expendes to data
+            data.descriptions[type].push(newItem);
 
-            // új tétel visszaadása
+            // return nem item
             return newItem;
         },
         // bevételek és kiadások összeszámolása
@@ -98,56 +104,59 @@ let budget = (() => {
             calculationOfTotalAmount("minus");
 
             // költségvetés kiszámolása
-            datas.budget = datas.values.plus - datas.values.minus;
+            data.budget = data.values.plus - data.values.minus;
 
             // százelék számolása
-            if (datas.values.plus > 0) {
-                datas.percent = Math.round(datas.values.minus / datas.values.plus * 100);
+            if (data.values.plus > 0) {
+                data.percent = Math.round(data.values.minus / data.values.plus * 100);
             } else {
-                datas.percent = -1;
+                data.percent = -1;
             }
         },
         // költségvetés visszaadása
         getAllAmount: function() {
             return {
-                budget: datas.budget,
-                totalPlus: datas.values.plus,
-                totalMinus: datas.values.minus,
-                percent: datas.percent
+                budget: data.budget,
+                totalPlus: data.values.plus,
+                totalMinus: data.values.minus,
+                percent: data.percent
             }
         },
         // a törölt tételt el kell távolítani a datas struktúrából
         deleteItem: function(type, id) { 
             // az összes id kinyerése
-            let indexOfAllItem = datas.descriptions[type].map(obj => obj.id);
+            let indexOfAllItem = data.descriptions[type].map(obj => obj.id);
             // törlésre váró objektum id-ja
             let indexOfItem = indexOfAllItem.indexOf(id);
             // az objektum törlése az őt tartalmazó mappából
             if (indexOfItem !== -1) {
-                datas.descriptions[type].splice(indexOfItem , 1);
+                data.descriptions[type].splice(indexOfItem , 1);
             }
         },
         // százalékok számítása
         calcPercentages: function() {
             // százalékok kiszámítása minden tételhez
-            return datas.descriptions.minus.map(x => x.percentageCalc(datas.values.plus));
+            return data.descriptions.minus.map(x => x.percentageCalc(data.values.plus));
         },
         // százalék lekérdezés
         queryPercentages: function() {
-            let expendesPercentages = datas.descriptions.minus.map(y => y.getPercentage());
+            let expendesPercentages = data.descriptions.minus.map(y => y.getPercentage());
             return expendesPercentages;
         },
         // tesztelés
         test: function() {
-            console.log(datas);
+            console.log(data);
         }
     }
 })();
 
 
+/*******
+MODUL UI
+*******/
 let userInterface = (() => {
     return {
-        // input adatok megszerzése
+        // getting input data
         getInput: () => {
             return {
                 type: plusOrMinus.value,
@@ -155,7 +164,7 @@ let userInterface = (() => {
                 value: Number(parseFloat(money.value).toFixed(2))
             }
         },
-        // adatok megjelenítése a felületen
+        // display items in ui
         displayItems: (obj, type) => {
             if (type === "plus") {
                 incomeList.innerHTML += `
@@ -231,18 +240,23 @@ let updatePercent = function() {
 }
 
 
+
+/************
+MODUL CONTROL
+************/
 let control = ((bud, ui) => {
+    // add a new item
     addButton.addEventListener("click", (e) => {
         e.preventDefault();
 
-        // 1. bevitt adatok megszerzése
+        // 1. getting input data
         let input = ui.getInput();
 
         if ( (input.dec.trim().length > 0) && (input.value > 0 && !isNaN(input.value)) ) {
-            // 2. adatok átadása a budget modulnak
+            // 2. transfer input to budget modul
             let newItem = bud.addItems(input.type, input.dec, input.value);
 
-            // 3. adatok megjelenítése
+            // 3. display item
             ui.displayItems(newItem, input.type);
 
             // 4. beviteli mezők kiürítése
