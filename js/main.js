@@ -65,7 +65,7 @@ let budget = (() => {
         percent: -1
     };
 
-    // bevételek és kiadások összegének kiszámítása
+    // sum of total income and expenditure
     let calculationOfTotalAmount = function(type) {
         let amount = data.descriptions[type].map(x => x.val).reduce((acc, next) => acc + next, 0);
         data.values[type] = amount;
@@ -97,23 +97,23 @@ let budget = (() => {
             // return nem item
             return newItem;
         },
-        // bevételek és kiadások összeszámolása
+        // calculation of budget
         calcTotal: function() {
-            // összes bevétel és összes kiadás számolása
+            // sum of total income and expenditure
             calculationOfTotalAmount("plus");
             calculationOfTotalAmount("minus");
 
-            // költségvetés kiszámolása
+            // calculation of budget
             data.budget = data.values.plus - data.values.minus;
 
-            // százelék számolása
+            // calculation of percentages
             if (data.values.plus > 0) {
                 data.percent = Math.round(data.values.minus / data.values.plus * 100);
             } else {
                 data.percent = -1;
             }
         },
-        // költségvetés visszaadása
+        // get budget
         getAllAmount: function() {
             return {
                 budget: data.budget,
@@ -194,11 +194,13 @@ let userInterface = (() => {
                 `
             }
         },
+        // init input fields
         initInputField: function() {
             description.value = "";
             money.value = "";
             description.focus();
         },
+        // display budget
         displayBudget: function(amount) {
             budgetValue.innerHTML = `${amount.budget} €`;
             budgetIncomeValue.innerHTML = `${amount.totalPlus} €`;
@@ -219,13 +221,11 @@ let userInterface = (() => {
 
 
 let updateAmount = function() {
-    // 5. költségvetés összeszámolása
+    // 1. calculation of budget
     budget.calcTotal();
-
-    // 6. összeg visszaadása
+    // 2. get budget
     let allAmount = budget.getAllAmount();
-
-    // 7. össszeg megjelenítése a felületen
+    // 3. display budget in ui
     userInterface.displayBudget(allAmount);
 };
 
@@ -238,7 +238,6 @@ let updatePercent = function() {
     // 3. Felület frissítése az új százalékokkal
     console.log(expendesPercentages);
 }
-
 
 
 /************
@@ -255,21 +254,14 @@ let control = ((bud, ui) => {
         if ( (input.dec.trim().length > 0) && (input.value > 0 && !isNaN(input.value)) ) {
             // 2. transfer input to budget modul
             let newItem = bud.addItems(input.type, input.dec, input.value);
-
             // 3. display item
             ui.displayItems(newItem, input.type);
-
-            // 4. beviteli mezők kiürítése
+            // 4. clear input fields
             ui.initInputField();
-
-            // 5. költségvetés összeszámolása
-            // 6. összeg visszaadása
-            // 7. össszeg megjelenítése a felületen
+            // 5. update amount
             updateAmount();
-
             // 8.százalékok újraszámolása
             updatePercent();
-
             bud.test();
         }  
     })
