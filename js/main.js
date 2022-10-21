@@ -259,9 +259,8 @@ let control = ((bud, ui) => {
             ui.displayItems(newItem, input.type);
             // 4. clear input fields
             ui.initInputField();
-            // 5. update amount
+            // 5. updates
             updateAmount();
-            // 8.százalékok újraszámolása
             updatePercent();
             bud.test();
         }  
@@ -270,17 +269,17 @@ let control = ((bud, ui) => {
     // delete item
     container.addEventListener("click", (e) => {
         if (e.target.closest(".item-delete")) {
-            // find ID of item
+            // 1. find ID of item
             let itemId = e.target.parentNode.parentNode.parentNode.id;
             if (itemId) {
                 let splitItemId = itemId.split("-");
                 let type = splitItemId[0];
                 let id = Number(splitItemId[1]);
-                // delete item from data
+                // 2. delete item from data
                 bud.deleteItem(type, id);
-                // remove item from ui
+                // 3. remove item from ui
                 ui.removeItem(itemId);
-                // updates
+                // 4. updates
                 updateAmount();
                 updatePercent();
             }
