@@ -122,13 +122,13 @@ let budget = (() => {
                 percent: data.percent
             }
         },
-        // a törölt tételt el kell távolítani a datas struktúrából
+        // delete item from data
         deleteItem: function(type, id) { 
-            // az összes id kinyerése
+            // all ID
             let indexOfAllItem = data.descriptions[type].map(obj => obj.id);
-            // törlésre váró objektum id-ja
+            // ID of item to delete
             let indexOfItem = indexOfAllItem.indexOf(id);
-            // az objektum törlése az őt tartalmazó mappából
+            // delete item
             if (indexOfItem !== -1) {
                 data.descriptions[type].splice(indexOfItem , 1);
             }
@@ -211,9 +211,10 @@ let userInterface = (() => {
                 budgetExpenditurePercent.innerHTML = "-";
             }
         },
+        // remove item
         removeItem: function(id) {
             let item = document.getElementById(id);
-            // egy elem gyermekének a törlése
+            // delete a child of an element
             item.parentNode.removeChild(item);
         }
     }
@@ -266,18 +267,20 @@ let control = ((bud, ui) => {
         }  
     })
     
-    // 1. eseménykezelő a törlés gombhoz
+    // delete item
     container.addEventListener("click", (e) => {
         if (e.target.closest(".item-delete")) {
-            // 2. típus kinyerése
-            // 3. id kinyerése
+            // find ID of item
             let itemId = e.target.parentNode.parentNode.parentNode.id;
             if (itemId) {
                 let splitItemId = itemId.split("-");
                 let type = splitItemId[0];
                 let id = Number(splitItemId[1]);
+                // delete item from data
                 bud.deleteItem(type, id);
+                // remove item from ui
                 ui.removeItem(itemId);
+                // updates
                 updateAmount();
                 updatePercent();
             }
