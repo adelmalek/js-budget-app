@@ -36,9 +36,8 @@ let budget = (() => {
         this.percent = -1;
     };
 
-    // százelék kiszámítása
+    // calculation of percentages
     Expenditures.prototype.percentageCalc = function(totalIncome) {
-        // százalék = kiadás értéke / összbevétel * 100
         if (totalIncome > 0) {
             this.percent = Math.round(this.val / totalIncome * 100);
         } else {
@@ -46,7 +45,7 @@ let budget = (() => {
         }
     };
 
-    // százalék kiolvasása az adott tételhez
+    // read out percentage for the given item
     Expenditures.prototype.getPercentage = function() {
         return this.percent;
     }
@@ -133,12 +132,11 @@ let budget = (() => {
                 data.descriptions[type].splice(indexOfItem , 1);
             }
         },
-        // százalékok számítása
+        // calculation of percentages
         calcPercentages: function() {
-            // százalékok kiszámítása minden tételhez
             return data.descriptions.minus.map(x => x.percentageCalc(data.values.plus));
         },
-        // százalék lekérdezés
+        // query percentages
         queryPercentages: function() {
             let expendesPercentages = data.descriptions.minus.map(y => y.getPercentage());
             return expendesPercentages;
@@ -184,7 +182,7 @@ let userInterface = (() => {
                         <div class="item-description">${obj.des}</div>
                         <div class="right">
                             <div class="item-value">${obj.val} &euro;</div>
-                            <div class="item-percent">21%</div>
+                            <div class="item-percent"></div>
                             <button class="item-delete" id="item-delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"> <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/> <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/> </svg>
                             </button>
@@ -216,6 +214,17 @@ let userInterface = (() => {
             let item = document.getElementById(id);
             // delete a child of an element
             item.parentNode.removeChild(item);
+        },
+        // display percentages
+        displayPercentages: function(percentages) {
+            let items = document.querySelectorAll(".item-percent");
+            for (let i = 0; i < percentages.length; i++) {
+                if (percentages[i] > 0) {
+                    items[i].innerHTML = percentages[i] + " %";
+                } else {
+                    items[i].innerHTML = "-";
+                }
+            }
         }
     }
 })();
@@ -232,12 +241,12 @@ let updateAmount = function() {
 
 
 let updatePercent = function() {
-    // 1. Százalékok újraszámolása
+    // 1. recalculating percentages
     budget.calcPercentages();
-    // 2. Százalékok kiolvasása a budget vezérlőből
+    // 2. reading percentages from the budget
     let expendesPercentages = budget.queryPercentages();
-    // 3. Felület frissítése az új százalékokkal
-    console.log(expendesPercentages);
+    // 3. update ui with new percentages
+    userInterface.displayPercentages(expendesPercentages);
 }
 
 
