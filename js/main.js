@@ -242,7 +242,7 @@ let userInterface = (() => {
                 "January", "February", "March", "April", 
                 "May", "June", "July", "August", "September", 
                 "October", "November", "December"
-            ]
+            ];
 
             let now = new Date;
             let monthIndex = now.getMonth();
@@ -250,6 +250,13 @@ let userInterface = (() => {
             let year = now.getFullYear();
 
             date.innerHTML = month + " " + year;
+        },
+        // change of item type
+        changeOfItemType: function() {
+            addButton.classList.toggle("red-btn");
+            plusOrMinus.classList.toggle("red");
+            description.classList.toggle("red");
+            money.classList.toggle("red");
         }
     }
 })();
@@ -320,7 +327,10 @@ let control = ((bud, ui) => {
         }
     })
 
+    // change of item type
+    plusOrMinus.addEventListener("change", ui.changeOfItemType)
+
     // display date
-    ui.displayDate()
-    
+    ui.displayDate();
+
 })(budget, userInterface);

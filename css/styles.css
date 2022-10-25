@@ -138,6 +138,10 @@ body {
     outline: none;
 }
 
+.add-type:focus {
+    border: 1px solid var(--income);
+}
+
 .add-description,
 .add-value {
     border: 1px solid #e7e7e7;
@@ -247,3 +251,11 @@ body {
 }
 
 .item:hover .item-delete svg { display: block; }
+
+.red:focus {
+    border: 1px solid var(--expenditure);
+}
+
+.red-btn svg:hover {
+    fill: var(--expenditure);
+}
