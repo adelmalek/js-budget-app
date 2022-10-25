@@ -16,6 +16,8 @@ const expenditureList = document.querySelector("#expenditure-list");
 
 const container = document.querySelector("#container");
 
+const date = document.querySelector(".budget-month");
+
 
 /***********
 MODUL BUDGET
@@ -233,6 +235,21 @@ let userInterface = (() => {
                     items[i].innerHTML = "-";
                 }
             }
+        },
+        // month and year
+        displayDate: function() {
+            let months =  [
+                "January", "February", "March", "April", 
+                "May", "June", "July", "August", "September", 
+                "October", "November", "December"
+            ]
+
+            let now = new Date;
+            let monthIndex = now.getMonth();
+            let month = months[monthIndex];
+            let year = now.getFullYear();
+
+            date.innerHTML = month + " " + year;
         }
     }
 })();
@@ -301,5 +318,9 @@ let control = ((bud, ui) => {
                 updatePercent();
             }
         }
-    });
+    })
+
+    // display date
+    ui.displayDate()
+    
 })(budget, userInterface);
