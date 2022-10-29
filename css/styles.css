@@ -94,7 +94,6 @@ body {
     letter-spacing: 1px;
 }
 
-.budget-incomes-percent,
 .budget-expenditure-percent {
     width: 34px;
     font-size: 11px;
@@ -258,4 +257,50 @@ body {
 
 .red-btn svg:hover {
     fill: var(--expenditure);
+}
+
+
+
+/* MEDIA QUERIES */
+
+
+@media screen and (max-width: 320px) {
+
+    .budget {
+        width: 250px;
+    }
+
+    .budget-value {
+        font-size: 20px;
+    }
+
+    .budget-header {
+        font-size: 15px;
+    }
+
+    .budget-income-word,
+    .budget-expenditure-word {
+        font-size: 11px;
+    }
+
+    .budget-income-value,
+    .budget-expenditure-value {
+        font-size: 11px;
+    }
+
+    .budget-expenditure-percent {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 568px) {
+    
+}
+
+@media screen and (min-width: 768px) {
+    
+}
+
+@media screen and (min-width: 1024px) {
+    
 }
