@@ -331,7 +331,7 @@ body {
     .expenditure {
         display: flex;
         flex-direction: column;
-        margin: 10px auto;
+        margin: 20px auto;
         width: 90%;
     }
 
